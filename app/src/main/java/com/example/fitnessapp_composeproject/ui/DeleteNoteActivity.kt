@@ -1,27 +1,37 @@
 package com.example.fitnessapp_composeproject.ui
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 
 class DeleteNoteActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val noteId = intent?.getStringExtra("note_id") ?: "unknown"
 
-        // Уязвимость 2: секрет/токен в открытом SharedPreferences
-        val prefs = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-        val demoToken = prefs.getString("session_token", "demo_secret_token_987654") ?: ""
-        prefs.edit().putString("session_token", demoToken).apply()
+        // Защита экрана от скриншотов и превью в мультизадачности
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
 
-        // Уязвимость 5: утечка токена в logcat
-        Log.d("AuthDebug", "token=$demoToken")
+        // В манифесте задано android:exported="false", плюс проверяем наличие авторизации/вызова внутри приложения
+        val isAuthorizedCall = intent?.getBooleanExtra("authorized", false) == true
+        if (!isAuthorizedCall) {
+            Toast.makeText(this, "Доступ запрещён", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
-        // Уязвимость 1: действие удаления без проверки прав и авторизации
-        Log.w("DeleteNoteActivity", "Deleted note_id=$noteId without auth check")
-        Toast.makeText(this, "Удалена заметка: $noteId", Toast.LENGTH_SHORT).show()
+        val noteId = intent?.getStringExtra("note_id")
+        if (noteId.isNullOrBlank()) {
+            Toast.makeText(this, "Некорректный идентификатор заметки", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        // Секреты и токены больше не хранятся в открытом SharedPreferences и не пишутся в Logcat
+        Toast.makeText(this, "Заметка $noteId обработана", Toast.LENGTH_SHORT).show()
         finish()
     }
 }
