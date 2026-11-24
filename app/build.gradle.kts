@@ -67,6 +67,10 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.coil.compose)
 
+    // MockWebServer & TLS для локального HTTPS мок-сервера (ЛР 15)
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp-tls:4.12.0")
+
     // Files & Serialization
     implementation(libs.kotlinx.serialization.json)
 

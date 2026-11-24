@@ -4,19 +4,23 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.InetSocketAddress
+import java.net.Proxy
 
 object ApiClient {
-    // ⚠️ СЮДА ВСТАВЬ СВОЙ БАЗОВЫЙ URL ОТ MOCKAPI.io (например: "https://65a123...mockapi.io/api/")
     private const val BASE_URL = "https://6aeb53b0ee39618d7bf83243.mockapi.io/"
 
-    // Логгер для отслеживания сетевых запросов в Logcat (удобно для отладки)
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val httpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .build()
+    private val httpClient: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            // Временный прокси для перехвата трафика в mitmproxy (убрать перед релизом)
+            .proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress("10.0.2.2", 8888)))
+            .build()
+    }
 
     val apiService: ApiService by lazy {
         Retrofit.Builder()

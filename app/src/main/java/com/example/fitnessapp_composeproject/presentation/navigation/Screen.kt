@@ -7,4 +7,5 @@ sealed class Screen(val route: String, val title: String) {
     object Pass : Screen("pass", "Пропуск")
     object Scan : Screen("scan", "Сканер")
     object AdminAudit : Screen("admin_audit", "Журнал")
+    object ChannelSecurity : Screen("channel_security", "Канал")
 }

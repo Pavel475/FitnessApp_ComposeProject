@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -43,6 +44,8 @@ fun MainRoot(
         if (accessContext.can(Permission.READ_AUDIT)) {
             add(Triple(Screen.AdminAudit, Icons.Default.AdminPanelSettings, "Журнал"))
         }
+
+        add(Triple(Screen.ChannelSecurity, Icons.Default.Security, "Канал"))
 
         add(Triple(Screen.Profile, Icons.Default.Person, "Профиль"))
         add(Triple(Screen.Settings, Icons.Default.Settings, "Настройки"))
@@ -84,6 +87,7 @@ fun MainRoot(
             composable(Screen.Pass.route) { PassScreen(accessViewModel = accessViewModel) }
             composable(Screen.Scan.route) { ScanScreen(accessViewModel = accessViewModel) }
             composable(Screen.AdminAudit.route) { AdminScreen(accessViewModel = accessViewModel) }
+            composable(Screen.ChannelSecurity.route) { ChannelSecurityScreen() }
             composable(Screen.Profile.route) { ProfileScreen(authViewModel = authViewModel) }
             composable(Screen.Settings.route) {
                 SettingsScreen(

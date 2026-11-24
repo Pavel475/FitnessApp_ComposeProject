@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Запрет cleartext (HTTP) по умолчанию в release-сборке -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Конфигурация пиннинга для целевых доменов -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.tracker.example</domain>
+        <domain includeSubdomains="true">localhost</domain>
+        <pin-set expiration="2026-12-31">
+            <!-- Primary SPKI pin -->
+            <pin digest="SHA-256">47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</pin>
+            <!-- Backup SPKI pin -->
+            <pin digest="SHA-256">YLh1dUR9y6Kja30RrAn7JKnbQG/uEtLMkBgFF2Fuihg=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- Пользовательские CA (mitmproxy / Charles) разрешены ТОЛЬКО в debug-сборке -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
